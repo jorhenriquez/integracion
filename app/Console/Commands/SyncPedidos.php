@@ -110,6 +110,7 @@ class SyncPedidos extends Command
                     $cd = ComunaCatalog::where('CODCD', $p['agencia_id'])->first();
                 }
 
+                $this->line(print_r($cd));
                 // 3.2) PEDEXT + DEVLINEXT con Eloquent (transacción en 'meribia')
                 try {
                     DB::connection('meribia')->transaction(function () use ($p) {
