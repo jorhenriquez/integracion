@@ -97,7 +97,6 @@ class SyncPedidos extends Command
                 
                 // 3.1) Crear dispatch en DispatchTrack
                 $res = $dispatchTrack->createDispatch($p);
-                $this->line(print_r($p));
                 dd();
                 if (($res['response']->status ?? '') !== 'ok' || ($res['status'] ?? '500') !== '200') {
                     $msg = "Error al ingresar pedido a DispatchTrack: ".json_encode($res);
