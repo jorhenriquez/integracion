@@ -38,7 +38,7 @@ class SyncPedidos extends Command
 
             $this->line('Total pedidos: ' . count($pedidos));
             Log::channel('integracion')->info('Pedidos a procesar', ['count' => count($pedidos)]);
-            dd();
+            
             if (!count($pedidos)) {
                 $this->info('No hay pedidos pendientes.');
                 return self::SUCCESS;
