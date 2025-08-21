@@ -25,7 +25,7 @@ class SyncPedidos extends Command
             $q = DB::connection('plataforma')->table('pedidos')
                 ->join('users', 'users.id', '=', 'pedidos.user_id')
                 ->join('comunas', 'comunas.CODCOM', '=', 'pedidos.comuna_id')
-                ->selectRaw('pedidos.*, users.codigo_cliente, users.rut, comunas.CODRUT');
+                ->selectRaw('pedidos.*, users.codigo_cliente, users.rut, comunas.CODRUT, comunas.CODCD');
 
             if ($doc = $this->option('documento')) {
                 $q->where('numero_documento', $doc);
@@ -87,10 +87,10 @@ class SyncPedidos extends Command
                 $p['cliente'] = $clientes[$codigoCliente] ?? [
                     'CODIGO' => $codigoCliente, 'NOMBRE' => 'Cliente', 'NOMFIS' => null, 'NIF' => null,
                 ];
-                $this->line(print_r($p));
+                
                 // 3.1) Crear dispatch en DispatchTrack
                 $res = $dispatchTrack->createDispatch($p);
-                dd();
+    
                 if (($res['response']->status ?? '') !== 'ok' || ($res['status'] ?? '500') !== '200') {
                     $msg = "Error al ingresar pedido a DispatchTrack: ".json_encode($res);
                     Log::channel('integracion')->error($msg, ['pedido' => $p['numero_documento']]);
@@ -177,5 +177,43 @@ class SyncPedidos extends Command
         if ($s === null) return '';
         $s = mb_convert_encoding($s, 'UTF-8', 'UTF-8');
         return trim(preg_replace('/\s+/', ' ', $s));
+    }
+
+    protected function insertarPedext($pedido, ?array $cliente): Pedext
+    {
+        // Mapea campos reales de tu PEDEXT:
+        $data = [
+            'NUMERO'        => (string) ($pedido->numero_documento ?? ''),
+            'CODCLI'        => (int) ($pedido->codigo_cliente ?? 0),
+            'RUT'           => $pedido->rut ?? null,
+            'DIRECCION'     => $pedido->direccion ?? null,
+            'CODCOM'        => (int) ($pedido->comuna_id ?? 0),
+            'FECHA_ENTREGA' => $pedido->fecha_estimada,    // yyyy-mm-dd
+            'CANTIDAD'      => (int) ($pedido->cantidad ?? 1),
+            'USRCREA'       => 'integracion',
+            'FECCREA'       => now(),                      // datetime
+        ];
+
+        /** @var Pedext $pedext */
+        $pedext = Pedext::query()->create($data); // conexión 'meribia' ya configurada en el modelo
+        return $pedext;
+    }
+
+    protected function insertarDevlinext($pedido, Pedext $pedext): Devlinext
+    {
+        // Si tienes más de una línea, itéralas; aquí va 1 de ejemplo:
+        $line = [
+            'ID_PEDEXT' => $pedext->getKey(),
+            'ITEM'      => 1,
+            'SKU'       => $pedido->sku ?? ($pedido->numero_material ?? null),
+            'DESCRIP'   => $pedido->descripcion ?? 'Item',
+            'CANTIDAD'  => (int) ($pedido->cantidad ?? 1),
+            'NUMERO'    => (string) ($pedido->numero_documento ?? ''),
+        ];
+
+        /** @var Devlinext $dev */
+        $dev = Devlinext::query()->create($line);
+
+        return $dev;
     }
 }
