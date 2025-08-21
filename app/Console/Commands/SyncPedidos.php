@@ -87,7 +87,7 @@ class SyncPedidos extends Command
                 $p['cliente'] = $clientes[$codigoCliente] ?? [
                     'CODIGO' => $codigoCliente, 'NOMBRE' => 'Cliente', 'NOMFIS' => null, 'NIF' => null,
                 ];
-                $this->line($p);
+                $this->line(print_r($p));
                 // 3.1) Crear dispatch en DispatchTrack
                 $res = $dispatchTrack->createDispatch($p);
 
