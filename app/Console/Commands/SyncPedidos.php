@@ -87,10 +87,9 @@ class SyncPedidos extends Command
                 $p['cliente'] = $clientes[$codigoCliente] ?? [
                     'CODIGO' => $codigoCliente, 'NOMBRE' => 'Cliente', 'NOMFIS' => null, 'NIF' => null,
                 ];
-                $this->line(print_r($p));
                 // 3.1) Crear dispatch en DispatchTrack
                 $res = $dispatchTrack->createDispatch($p);
-
+                dd();
                 if (($res['response']->status ?? '') !== 'ok' || ($res['status'] ?? '500') !== '200') {
                     $msg = "Error al ingresar pedido a DispatchTrack: ".json_encode($res);
                     Log::channel('integracion')->error($msg, ['pedido' => $p['numero_documento']]);

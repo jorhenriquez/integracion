@@ -43,23 +43,38 @@ class DispatchTrackService
 
         // EJEMPLO de mapeo. Ajusta claves al contrato real del API:
         return [
-            'identifier'       => $p['numero_documento'] ?? null,
-            'client_code'      => $p['codigo_cliente'] ?? null,
-            'recipient'        => [
-                'name'    => $p['nombre_cliente'] ?? ($p['cliente']['NOMBRE'] ?? 'Cliente'),
-                'tax_id'  => $p['rut'] ?? null,
-                'address' => $direccion,
-                'city'    => $p['comuna'] ?? null,
-            ],
-            'items'            => [
+            'identifier' => "hola",
+            'contact_name' => "Eric Doe",
+            "contact_address" => "458 Fairway Drive, Schererville, IN 46375",
+            "load" => 1,
+            "priority" => 1,
+            "service_time" => 30,
+            "items" => [
+                    [
+                        "code" => "SKU123",
+                        "description" => "LED Monitor",
+                        "quantity" => 1,
+                        "extras" => [
+                            [
+                                "name" => "Custom Item ID",
+                                "value" => "23543"
+                            ],
+                        ],
+                    ],
+                ],
+            "tags" => [
                 [
-                    'sku'         => $p['numero_material'] ?? 'SKU',
-                    'description' => $p['descripcion'] ?? 'Item',
-                    'quantity'    => (int) ($p['cantidad'] ?? 1),
+                    "name" => "Custom Guide Code",
+                    "value" => "8932034",
+                    "type" => "Tag type (string/date)"
+                ]
+            ],
+            "groups" => [
+                [
+                    'name' => 'Group Name',
+                    'type' => 'group_type', // Ajusta según tu lógica
                 ],
             ],
-            'estimated_date'   => $p['fecha_estimada'] ?? null, // YYYY-mm-dd
-            'notes'            => $p['observaciones'] ?? null,
         ];
     }
 
