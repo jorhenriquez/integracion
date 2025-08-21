@@ -45,7 +45,7 @@ class DispatchTrackService
         return [
             'identifier' => $p['codigo_cliente'].'-'.$p['numero_documento'] ?? '',
             'contact_name' => $p['destino'] ?? 'Cliente Desconocido',
-            "contact_address" => $direccion,
+            "contact_address" => $direccion.', '.$p['comuna'],
             "load" => 1,
             "priority" => 1,
             "items" => [
@@ -57,14 +57,14 @@ class DispatchTrackService
                 ],
             "tags" => [
                 [
-                    "name" => "Custom Guide Code",
-                    "value" => "8932034",
+                    "name" => "Entrega Estimada",
+                    "value" => $p['fecha_estimada'],
                     "type" => "Tag type (string/date)"
                 ]
             ],
             "groups" => [
                 [
-                    'name' => 'VECTOR',
+                    'name' => $p['cliente']['NOMBRE'],
                     'category' => 'CLIENTES', // Ajusta según tu lógica,
                     'force_create' => true, // Si necesitas forzar creación de grupo
                 ],
