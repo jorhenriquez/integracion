@@ -67,7 +67,7 @@ class SyncPedidos extends Command
                 $c = (array) $c;
                 $clientes[(int) $c['CODIGO']] = $c;
             }
-
+            dd();
             // 3) Procesar cada pedido
             foreach ($pedidos as $p) {
 
