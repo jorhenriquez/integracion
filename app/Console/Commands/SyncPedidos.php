@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Meribia\Pedext;
 use App\Models\Meribia\Devlinext;
 use App\Services\DispatchTrackService;
+use App\Services\IntegracionService;
 use App\Support\LeadTime;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -18,6 +19,11 @@ class SyncPedidos extends Command
 
     public function handle(DispatchTrackService $dispatchTrack)
     {
+
+        // Ejemplo en el Command handle():
+        $count = app(IntegracionService::class)->syncComunas();
+        $this->info("Catálogo de comunas sincronizado: {$count} filas.");
+
         $this->info('== Iniciando integración ==');
 
         try {
