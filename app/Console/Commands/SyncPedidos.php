@@ -67,7 +67,7 @@ class SyncPedidos extends Command
                 $c = (array) $c;
                 $clientes[(int) $c['CODIGO']] = $c;
             }
-            dd();
+        
             // 3) Procesar cada pedido
             foreach ($pedidos as $p) {
 
@@ -87,7 +87,7 @@ class SyncPedidos extends Command
                 $p['cliente'] = $clientes[$codigoCliente] ?? [
                     'CODIGO' => $codigoCliente, 'NOMBRE' => 'Cliente', 'NOMFIS' => null, 'NIF' => null,
                 ];
-
+                dd();
                 // 3.1) Crear dispatch en DispatchTrack
                 $res = $dispatchTrack->createDispatch($p);
 
