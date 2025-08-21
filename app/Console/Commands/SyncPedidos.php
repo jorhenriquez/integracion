@@ -106,23 +106,21 @@ class SyncPedidos extends Command
                 }
                 $this->info("-- Creado con éxito en DispatchTrack");
 
-                if ($p['agencia_id'] ?? null) {
-                    $cd = ComunaCatalog::where('CODCD', $p['agencia_id'])->first();
-                }
-
-                $this->line($cd->nif);
                 // 3.2) PEDEXT + DEVLINEXT con Eloquent (transacción en 'meribia')
                 try {
                     DB::connection('meribia')->transaction(function () use ($p) {
                         // Normalización básica de dirección
                         $direccion = $this->normalize($p['direccion'] ?? '');
+                        if ($p['agencia_id'] ?? null) {
+                            $cd = ComunaCatalog::where('CODCD', $p['agencia_id'])->first();
+                        }
 
                         /** @var Pedext $pedext */
                         $pedext = Pedext::query()->create([
                             // AJUSTA estos nombres a tu esquema real:
                             'TIPO'        => 'D',
                             'NIFCLI'      => $p['cliente']['NIF'],
-                            'NIFCON' => $cd->nif ?? null,
+                            'NIFCON' =>     $cd->nif,
                             'NIFREM'      => $p['rut'] ?? null,
                             'NIFDES'     => $p['cliente']['NIF'],
                             'NOMCOM'    =>'API',
