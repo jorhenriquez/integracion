@@ -43,23 +43,16 @@ class DispatchTrackService
 
         // EJEMPLO de mapeo. Ajusta claves al contrato real del API:
         return [
-            'identifier' => "hola",
-            'contact_name' => "Eric Doe",
-            "contact_address" => "458 Fairway Drive, Schererville, IN 46375",
+            'identifier' => $p['codigo_cliente'].'-'.$p['numero_documento'] ?? '',
+            'contact_name' => $p['destino'] ?? 'Cliente Desconocido',
+            "contact_address" => $direccion,
             "load" => 1,
             "priority" => 1,
-            "service_time" => 30,
             "items" => [
                     [
-                        "code" => "SKU123",
-                        "description" => "LED Monitor",
-                        "quantity" => 1,
-                        "extras" => [
-                            [
-                                "name" => "Custom Item ID",
-                                "value" => "23543"
-                            ],
-                        ],
+                        "code" => "",
+                        "description" => "Bultos",
+                        "quantity" => $p['cantidad'] ?? 1,
                     ],
                 ],
             "tags" => [
@@ -71,8 +64,9 @@ class DispatchTrackService
             ],
             "groups" => [
                 [
-                    'name' => ' VECTOR ',
-                    'type' => 'CLIENTES', // Ajusta según tu lógica
+                    'name' => 'VECTOR',
+                    'category' => 'CLIENTES', // Ajusta según tu lógica,
+                    'force_create' => true, // Si necesitas forzar creación de grupo
                 ],
             ],
         ];
