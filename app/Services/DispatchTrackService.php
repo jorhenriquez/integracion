@@ -71,7 +71,7 @@ class DispatchTrackService
             ],
             "groups" => [
                 [
-                    'name' => 'VECTOR',
+                    'name' => ' VECTOR ',
                     'type' => 'CLIENTES', // Ajusta según tu lógica
                 ],
             ],
