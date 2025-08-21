@@ -200,7 +200,8 @@ class SyncPedidos extends Command
                             'CODPDC' => 0,
                         ]);
 
-                        dd();
+                        /*
+                        
                         // Una línea de ejemplo (si tienes varias, itera)
                         $pedext->lineas()->create([
                             // AJUSTA estos nombres a tu esquema real:
@@ -210,7 +211,9 @@ class SyncPedidos extends Command
                             'CANTIDAD'  => (int) ($p['cantidad'] ?? 1),
                             'NUMERO'    => (string) ($p['numero_documento'] ?? ''),
                         ]);
+                        */
                     });
+                    
 
                     $this->info("-- Creado con éxito en PEDEXT/DEVLINEXT (Meribia)");
                     Log::channel('integracion')->info('Meribia insert OK', ['numero_documento' => $p['numero_documento']]);
@@ -220,7 +223,7 @@ class SyncPedidos extends Command
                     $this->warn("Error creando Pedext/Devlinext: ".$e->getMessage());
                     continue;
                 }
-
+                dd();
                 // 3.3) Actualizar plataforma (esta_respaldado=1, fecha_estimada)
                 try {
                     DB::connection('plataforma')->table('pedidos')
