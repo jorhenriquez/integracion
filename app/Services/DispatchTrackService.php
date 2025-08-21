@@ -24,7 +24,7 @@ class DispatchTrackService
 
         $resp = $client->post('/dispatches', $payload); // <- Ajusta path real
 
-        Log::channel('integracion')->info('DispatchTrack request', ['payload' => $payload]);
+        Log::channel('integracion')->info('DispatchTrack request', [$payload]);
         Log::channel('integracion')->info('DispatchTrack response', ['status' => $resp->status(), 'body' => $resp->json()]);
 
         return [
@@ -71,8 +71,8 @@ class DispatchTrackService
             ],
             "groups" => [
                 [
-                    'name' => 'Group Name',
-                    'type' => 'group_type', // Ajusta según tu lógica
+                    'name' => 'VECTOR',
+                    'type' => 'CLIENTES', // Ajusta según tu lógica
                 ],
             ],
         ];
