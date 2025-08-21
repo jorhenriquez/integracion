@@ -24,7 +24,7 @@ class DispatchTrackService
 
         $resp = $client->post('/dispatches', $payload); // <- Ajusta path real
 
-        Log::channel('integracion')->info('DispatchTrack request', [$payload]);
+        Log::channel('integracion')->info('DispatchTrack request', $payload);
         Log::channel('integracion')->info('DispatchTrack response', ['status' => $resp->status(), 'body' => $resp->json()]);
 
         return [
