@@ -34,7 +34,7 @@ class SyncPedidos extends Command
                   ->where('estado_recepcion', 3);
             }
 
-            $pedidos = $q->orderBy('pedidos.id')->get()->map(fn($r) => (array) $r)->first();
+            $pedidos = $q->orderBy('pedidos.id')->get()->map(fn($r) => (array) $r)->all();
 
             $this->line('Total pedidos: ' . count($pedidos));
             Log::channel('integracion')->info('Pedidos a procesar', ['count' => count($pedidos)]);
