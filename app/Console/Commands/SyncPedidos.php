@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Meribia\Pedext;
 use App\Models\Meribia\Devlinext;
+use App\Models\ComunaCatalog;
 use App\Services\DispatchTrackService;
 use App\Services\IntegracionService;
 use App\Support\LeadTime;
@@ -106,6 +107,10 @@ class SyncPedidos extends Command
                 }
                 $this->info("-- Creado con éxito en DispatchTrack");
 
+                if ($p['agencia_id'] ?? null) {
+                    $cd = ComunaCatalog::where('CODCD', $p['agencia_id'])->first();
+                }
+
                 // 3.2) PEDEXT + DEVLINEXT con Eloquent (transacción en 'meribia')
                 try {
                     DB::connection('meribia')->transaction(function () use ($p) {
@@ -115,17 +120,87 @@ class SyncPedidos extends Command
                         /** @var Pedext $pedext */
                         $pedext = Pedext::query()->create([
                             // AJUSTA estos nombres a tu esquema real:
-                            'NUMERO'        => (string) ($p['numero_documento'] ?? ''),
-                            'CODCLI'        => (int) ($p['codigo_cliente'] ?? 0),
-                            'RUT'           => $p['rut'] ?? null,
-                            'DIRECCION'     => $direccion,
-                            'CODCOM'        => (int) ($p['comuna_id'] ?? 0),
-                            'FECHA_ENTREGA' => $p['fecha_estimada'],          // yyyy-mm-dd
-                            'CANTIDAD'      => (int) ($p['cantidad'] ?? 1),
-                            'USRCREA'       => 'integracion',
-                            'FECCREA'       => now(),                         // datetime
+                            'TIPO'        => 'D',
+                            'NIFCLI'      => $p['cliente']['NIF'],
+                            'NIFCON' => $cd->nif ?? null,
+                            'NIFREM'      => $p['rut'] ?? null,
+                            'NIFDES'     => $p['cliente']['NIF'],
+                            'NOMCOM'    =>'API',
+                            'FECHA'         => null,
+                            'FECLIM' => null,
+                            'REFERENCIA' => $p['codigo_cliente'].'-'.$p['numero_documento'],
+                            'NUMPLA' => '0',
+                            'CMR' => $p['folio_interno'] ?? '',
+                            'CRT' => '',
+                            'DTMI' => '',
+                            'NOMTIPMER' => '1. Estandar',
+                            'NOMCAT' => '',
+                            'NOMCLA' => '',
+                            'CODPRY' => '',
+                            'CODRUT' => 'cambiar este codigo',
+                            'PGORI' => 13677,
+                            'ORIGEN' => 'API',
+                            'DIRORI1' => 'CARGA POR SISTEMA',
+                            'DIRORI2' => '',
+                            'CPORI' => 'API',
+                            'POBLAORI' => 'Comuna API',
+                            'PROVIORI' => 'API',
+                            'NOMPAIORI' => 'CHILE',
+                            'ZONORI' => 'API',
+                            'FECHORORI' => now()->toDateString(), // fecha actual
+                            'HASFECHORORI' => now()->toDateString(), // fecha actual
+                            'REFORI' => $p['codigo_cliente'].'-'.$p['numero_documento'],
+                            'CONORI' => '',
+                            'TELORI' => '',
+                            'MOVORI' => '',
+                            'PGDES' => 0,
+                            'DESTINO' => $p['destino'] ?? 'Sin información',
+                            'DIRDES1' => $direccion,
+                            'DIRDES2' => '',
+                            'CPDES' => $p['comuna_id'].'0000',
+                            'POBLADES' => $p['comuna'] ?? 'Sin información',
+                            'PROVIDES' => $p['provincia'] ?? '',
+                            'NOMPAIDES' => $p['CODCOM'],
+                            'ZONDES' => $p['zona'] ?? 'Sin información',
+                            'FECHORDES' => $p['fecha_estimada'],
+                            'HASFECHORDES' => $p['fecha_estimada'],
+                            'REFDES' => $p['codigo_cliente'].'-'.$p['numero_documento'],
+                            'CONDES' => '',
+                            'TELDES' => '',
+                            'MOVDES' => '',
+                            'NOMMER' => 'Varios',
+                            'PESO' => (float) ($p['peso'] ?? 0),
+                            'NOMENV' => 'Palet',
+                            'ENVASES' => (int) ($p['cantidad'] ?? 1),
+                            'UNIDADES' => 0,
+                            'VOLUMEN' => (float) ($p['volumen'] ?? 0),
+                            'METROS' => 0,
+                            'DOCUMENTOS' => $p['numero_documento'] ?? '',
+                            'NUMDOC' => 1,
+                            'REQMAT' => '',
+                            'NOMTIPMAT' => '',
+                            'TIPFAC' => 'K',
+                            'CANTIDAD' => 0,
+                            'PREUNI' => 0,
+                            'VALMER' => $p['valor_neto'] ?? 0,
+                            'TELEFONO' => '',
+                            'DESCRIPCION' => '',
+                            'CLAVE1' => '',
+                            'OBSERVACIONES' => '',
+                            'PROCESANDO' => 0,
+                            'PROCESADO' => 0,
+                            'ESTCARGA' => NULL,
+                            'NOMDELCLI' => NULL,
+                            'INSCAR' => NULL,
+                            'MEDIO' => NULL,
+                            'DISTRIBUCION' => NULL,
+                            'NOTASERROR' => '',
+                            'ERROR' => 0,
+                            'BORRADO' => 0,
+                            'CODPDC' => 0,
                         ]);
 
+                        dd();
                         // Una línea de ejemplo (si tienes varias, itera)
                         $pedext->lineas()->create([
                             // AJUSTA estos nombres a tu esquema real:
