@@ -139,6 +139,6 @@ class Pedext extends Model
 
     public function lineas()
     {
-        return $this->hasMany(Devlinext::class, 'ID_PEDEXT', $this->primaryKey);
+        return $this->hasMany(Devlinext::class, 'PEDEXT', 'CODIGO');
     }
 }

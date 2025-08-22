@@ -74,6 +74,6 @@ class Devlinext extends Model
 
     public function pedext()
     {
-        return $this->belongsTo(Pedext::class, 'ID_PEDEXT', 'ID');
+        return $this->belongsTo(Pedext::class, 'PEDEXT', 'CODIGO');
     }
 }
