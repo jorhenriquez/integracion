@@ -2,21 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use Throwable;
+use App\Support\LeadTime;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use App\Models\ComunaCatalog;
+
+
 use App\Models\Meribia\Carga;
 use App\Models\Meribia\Viaje;
-
-
 use App\Models\Meribia\Pedext;
-use App\Models\Meribia\Devlinext;
-use App\Models\ComunaCatalog;
-use App\Services\DispatchTrackService;
-use App\Services\IntegracionService;
-use App\Support\LeadTime;
+use Illuminate\Support\Carbon;
 use Illuminate\Console\Command;
+use App\Models\Meribia\Devlinext;
 use Illuminate\Support\Facades\DB;
-use Throwable;
+use Illuminate\Support\Facades\Log;
+use App\Services\IntegracionService;
+use App\Services\DispatchTrackService;
 
 class WebhookController extends Controller
 {
@@ -58,7 +59,54 @@ class WebhookController extends Controller
         
     }
 
-    public function handelDispatchEvent(array $payload)
+    public function handleDispatchEvent(array $payload)
+    {
+        // Aquí puedes manejar los eventos de dispatch
+        Log::channel('integracion')->info('Manejando evento de dispatch', $payload);
+        
+        if (!isset($payload['event'])) {
+            Log::channel('integracion')->info('Evento no viene en payload', $payload);
+            return response()->json(['status' => 'ignored']);
+        }   
+
+        switch($payload['event']) {
+            case 'created':
+                // Lógica para manejar el evento de creación
+                return response()->json(['status' => 'handled']);
+            case 'updated':
+                // Lógica para manejar el evento de actualización
+                return $this->handleUpdatedDispatchEvent($payload);
+            case 'deleted':
+                // Lógica para manejar el evento de eliminación
+                return response()->json(['status' => 'handled']);
+            default:
+                Log::channel('integracion')->warning('Evento no soportado', ['event' => $payload['event']]);
+                return response()->json(['status' => 'ignored']);
+        }
+    }
+
+    public function handleRouteEvent(array $payload)
+    {
+        // Aquí puedes manejar los eventos de dispatch
+        Log::channel('integracion')->info('Manejando evento de route', $payload);
+        
+        if (!isset($payload['event'])) {
+            Log::channel('integracion')->info('Evento no viene en payload', $payload);
+            return response()->json(['status' => 'ignored']);
+        }   
+
+        switch($payload['event']) {
+            case 'created': return response()->json(['status' => 'handled']);
+            case 'started': return $this->handleStartedRouteEvent($payload);
+            case 'ended':   return $this->handleEndedRouteEvent($payload);
+            case 'updated': return response()->json(['status' => 'handled']);
+            default:
+                Log::channel('integracion')->warning('Evento no soportado', ['event' => $payload['event']]);
+                return response()->json(['status' => 'ignored']);
+        }
+    }
+
+    public function handleTruckEvent(array $payload)
     {
         // Aquí puedes manejar los eventos de dispatch
         Log::channel('integracion')->info('Manejando evento de dispatch', $payload);
@@ -180,6 +228,89 @@ class WebhookController extends Controller
                 'error' => $e->getMessage(),
                 'codigo_cliente' => $codigoCliente,
                 'numero_documento' => $numeroDocumento
+            ]);
+            return response()->json(['error' => 'Error interno'], 500);
+        }
+
+        return response()->json(['status' => 'ok']);
+    }
+
+    public function handleStartedRouteEvent(array $payload)
+    {
+        // Extraer identifier y dividirlo
+        $route = $payload['route'] ?? null;
+        
+        if (!$route) {
+            Log::channel('integracion')->warning('Formato de route inválido', ['route' => $route]);
+            return response()->json(['error' => 'Invalid route'], 400);
+        }
+
+                // Supongamos que este es el valor que recibes del webhook
+        $webhookDate = $payload['started_at'];
+
+        // Lo convertimos a un objeto Carbon
+        $carbonDate = Carbon::parse($webhookDate);
+
+        // Si quieres guardarlo en UTC o en la zona horaria del servidor, puedes convertirlo
+        $carbonDate->setTimezone('America/Santiago'); // o 'America/Santiago' si prefieres tu zona local
+
+        // Luego lo formateas para guardar en la base de datos
+        $formattedDate = $carbonDate->format('Y-m-d H:i:s.u');
+
+        // Buscar pedido en la BD de plataforma
+        try {
+            DB::connection('meribia')->table('viaje')
+                ->where('sello', $route)
+                ->update([
+                    'HORINI'      => $formattedDate,
+                ]);
+
+        }
+        catch (Throwable $e) {
+            Log::channel('integracion')->error('Error al actualizar route', [
+                'error' => $e->getMessage(),
+                'route' => $route,
+            ]);
+            return response()->json(['error' => 'Error interno'], 500);
+        }
+
+        return response()->json(['status' => 'ok']);
+    }
+
+    public function handleEndedRouteEvent(array $payload)
+    {
+        // Extraer identifier y dividirlo
+        $route = $payload['route'] ?? null;
+        
+        if (!$route) {
+            Log::channel('integracion')->warning('Formato de route inválido', ['route' => $route]);
+            return response()->json(['error' => 'Invalid route'], 400);
+        }
+
+                // Supongamos que este es el valor que recibes del webhook
+        $webhookDate = $payload['ended_at'];
+        // Lo convertimos a un objeto Carbon
+        $carbonDate = Carbon::parse($webhookDate);
+
+        // Si quieres guardarlo en UTC o en la zona horaria del servidor, puedes convertirlo
+        $carbonDate->setTimezone('America/Santiago'); // o 'America/Santiago' si prefieres tu zona local
+
+        // Luego lo formateas para guardar en la base de datos
+        $formattedDate = $carbonDate->format('Y-m-d H:i:s.u');
+
+        // Buscar pedido en la BD de plataforma
+        try {
+            DB::connection('meribia')->table('viaje')
+                ->where('sello', $route)
+                ->update([
+                    'HORFIN'      => $formattedDate,
+                ]);
+
+        }
+        catch (Throwable $e) {
+            Log::channel('integracion')->error('Error al actualizar route', [
+                'error' => $e->getMessage(),
+                'route' => $route,
             ]);
             return response()->json(['error' => 'Error interno'], 500);
         }
