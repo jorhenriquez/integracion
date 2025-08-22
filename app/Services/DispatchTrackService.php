@@ -7,6 +7,49 @@ use Illuminate\Support\Facades\Log;
 
 class DispatchTrackService
 {
+    /**
+     * Envía una ruta al endpoint /routes de DispatchTrack
+     */
+    public function createRoute(array $ruta): array
+    {
+        $cfg = config('services.dispatchtrack');
+
+        $client = Http::timeout($cfg['timeout'] ?? 15)
+            ->baseUrl($cfg['base_url'] ?? '')
+            ->withHeaders([
+                $cfg['token_name'] ?? 'Authorization' => $cfg['token'] ?? '',
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+            ]);
+
+        $payload = $this->mapRutaToDispatchPayload($ruta);
+        $resp = $client->post('/routes', $payload);
+
+        Log::channel('integracion')->info('DispatchTrack /routes request', $payload);
+        Log::channel('integracion')->info('DispatchTrack /routes response', ['status' => $resp->status(), 'body' => $resp->json()]);
+
+        return [
+            'status'   => (string) $resp->status(),
+            'response' => (object) [
+                'status'    => $resp->successful() ? 'ok' : 'error',
+                'response'  => $resp->json(),
+            ],
+        ];
+    }
+
+    /**
+     * Mapea los datos de la ruta al formato esperado por DispatchTrack /routes
+     */
+    private function mapRutaToDispatchPayload(array $ruta): array
+    {
+        // Ajusta el mapeo según el contrato real del endpoint /routes
+        return [
+            'identifier' => $ruta['identifier'] ?? $ruta['ID'] ?? $ruta['id'] ?? uniqid('ruta_'),
+            'name' => $ruta['name'] ?? $ruta['NOMBRE'] ?? $ruta['nombre'] ?? 'Ruta',
+            'date' => $ruta['date'] ?? $ruta['FECHA'] ?? $ruta['fecha'] ?? now()->toDateString(),
+            // ...otros campos según lo que requiera DispatchTrack...
+        ];
+    }
     public function createDispatch(array $pedido): array
     {
         $cfg = config('services.dispatchtrack');

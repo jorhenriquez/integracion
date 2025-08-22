@@ -9,5 +9,7 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 
+
 Schedule::command('integracion:sync-pedidos')->everyTenMinutes()->withoutOverlapping();
+Schedule::command('integracion:sync-rutas')->everyTenMinutes()->withoutOverlapping();
 
