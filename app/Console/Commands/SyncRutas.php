@@ -49,6 +49,8 @@ class SyncRutas extends Command
             ->join('VIAJES_PENDING', 'VIAJES_PENDING.VIAJE', '=', 'GRUPAGE.CODVIA')
             ->where('VIAJES_PENDING.VIAJE', $ruta['viaje'])   // 👈 ajusta aquí la columna correcta
             ->get();
+        
+        dd($dispatches);
 
         return [
             'truck' => $ruta['patente'],
