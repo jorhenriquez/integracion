@@ -12,5 +12,8 @@ class Viaje extends Model
     public $incrementing = true;
     protected $keyType = 'int';
     public $timestamps = false;
+    protected $fillable = [
+        'SELLO'
+    ];
     protected $guarded = [];
 }

@@ -34,7 +34,14 @@ class SyncRutas extends Command
                 $this->info("Camión creado: " . $ruta['patente']);
             }
             $res = $dispatchTrack->createRoute($payload);
-            $this->line("- Ruta enviada: " . ($res['response']->response['response']['route_id'] ?? 'sin id') . " | Status: " . $res['status']);
+            $route_id = $res['response']->response['response']['route_id'] ?? 'sin id';
+            $this->line("- Ruta enviada: " . $route_id . " | Status: " . $res['status']);
+
+            // Actualizar VIAJES.SELLO con el route_id
+            if ($route_id !== 'sin id' && isset($ruta['viaje'])) {
+                \App\Models\Meribia\Viaje::where('CODIGO', $ruta['viaje'])->update(['SELLO' => $route_id]);
+                $this->info("VIAJE actualizado: CODIGO={$ruta['viaje']} SELLO={$route_id}");
+            }
         }
 
         $this->info('== Proceso finalizado ==');
