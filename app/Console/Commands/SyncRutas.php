@@ -39,7 +39,7 @@ class SyncRutas extends Command
 
             // Actualizar VIAJES.SELLO con el route_id
             if ($route_id !== 'sin id' && isset($ruta['viaje'])) {
-                \App\Models\Meribia\Viaje::where('CODIGO', $ruta['viaje'])->update(['SELLO' => $route_id]);
+                \App\Models\Meribia\Viaje::where('CODIGO', $ruta['viaje'])->update(['SELLO' => (string) $route_id]);
                 $this->info("VIAJE actualizado: CODIGO={$ruta['viaje']} SELLO={$route_id}");
             }
         }
