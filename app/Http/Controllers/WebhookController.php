@@ -304,6 +304,14 @@ class WebhookController extends Controller
                 ->where('sello', $route)
                 ->update([
                     'HORFIN'      => $formattedDate,
+                    'CERRADO'     => 1,
+                    'FECLLE'      => $carbonDate->format('Y-m-d'),
+                    'FECCIE'      => Carbon::now()->format('Y-m-d'),
+                    'ESCCOM'      => 1,
+                    'KILLIQ1_1'   => DB::connection('meribia')->table('viaje')->where('sello', $route)->value('kilos'),
+                    'KILLIQ2_1'   => DB::connection('meribia')->table('viaje')->where('sello', $route)->value('kilos'),
+                    'KILLIQAUX1_1' => DB::connection('meribia')->table('viaje')->where('sello', $route)->value('kilos'),
+                    'KILLIQAUX2_1' => DB::connection('meribia')->table('viaje')->where('sello', $route)->value('kilos'),
                 ]);
 
         }
