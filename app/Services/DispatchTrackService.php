@@ -29,8 +29,9 @@ class DispatchTrackService
         Log::channel('integracion')->info('DispatchTrack /trucks (check) response', ['status' => $resp->status(), 'body' => $resp->json()]);
 
         if ($resp->successful()) {
-            $data = $resp->json();
-            return !empty($data) && isset($data[0]) && $data[0]['identifier'] === $patente;
+            //$data = $resp->json();
+            //return !empty($data) && isset($data[0]) && $data[0]['identifier'] === $patente;
+            return true;
         }
         return false;
     }
