@@ -50,7 +50,7 @@ class SyncRutas extends Command
             ->where('VIAJES_PENDING.VIAJE', $ruta['viaje'])   // 👈 ajusta aquí la columna correcta
             ->get();
         
-        dd($dispatches);
+        
 
         return [
             'truck' => $ruta['patente'],
