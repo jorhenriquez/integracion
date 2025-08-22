@@ -22,7 +22,7 @@ class IntegracionService
         $payload = [];
         foreach ($rows as $r) {
             $cod = (int) $r->CODCD;
-            $nif = '48.100.' . str_pad((string)$cod, 3, '0', STR_PAD_LEFT);
+            $nif = '48.100.' . str_pad((string)$cod, 3, '0', STR_PAD_LEFT).'-1';
             $payload[] = [
                 'codcd'      => $cod,
                 'nomcd'      => (string) $r->NOMCD,
