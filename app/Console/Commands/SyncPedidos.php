@@ -159,7 +159,7 @@ class SyncPedidos extends Command
                             'POBLADES' => $p['comuna'] ?? 'Sin información',
                             'PROVIDES' => $p['provincia'] ?? '',
                             'NOMPAIDES' => 'CHILE',
-                            'ZONDES' => $p['zona'] ?? 'Sin información',
+                            'ZONDES' => $p['comuna_id'] ?? '',
                             'FECHORDES' => $p['fecha_estimada'],
                             'HASFECHORDES' => $p['fecha_estimada'],
                             'REFDES' => $p['codigo_cliente'].'-'.$p['numero_documento'],
