@@ -55,7 +55,12 @@ class SyncRutas extends Command
         return [
             'truck' => $ruta['patente'],
             'date' => \Carbon\Carbon::parse($ruta['fecha'])->format('d-m-Y'),
-            'dispatches' => $dispatches,
+            'dispatches' => $dispatches->map(function ($dispatches) {
+                return [
+                    'identifier' => $dispatches->identifier,
+                ];
+            })->toArray()
+
             // ...otros campos según lo que requiera DispatchTrack...
         ];
     }
