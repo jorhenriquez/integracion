@@ -29,9 +29,10 @@ class SyncRutas extends Command
             // Buscar las Ordenes por cada ruta y agregarlas al payload
             $payload = $this->mapRutaToDispatchPayload($ruta);
             $res = $dispatchTrack->createRoute($payload);
-            $this->line($res['response']->response);
+            
             if ($res['response']->response == 'Invalid truck identifier')
             {
+                $this->line($res['response']->response);
                 $dispatchTrack->createTruck($ruta['patente']); 
                 $this->info("Camión creado: " . $ruta['patente']);
             }
