@@ -29,7 +29,6 @@ class SyncRutas extends Command
             // Buscar las Ordenes por cada ruta y agregarlas al payload
             $payload = $this->mapRutaToDispatchPayload($ruta);
             $res = $dispatchTrack->createRoute($payload);
-            Log::channel('integracion')->info('DispatchTrack /routes', ['payload' => $payload, 'response' => $res]);
             $this->line("- Ruta enviada: " . ($payload['identifier'] ?? 'sin id') . " | Status: " . $res['status']);
         }
 
