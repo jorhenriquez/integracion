@@ -135,7 +135,7 @@ class SyncPedidos extends Command
                             'NOMCAT' => '',
                             'NOMCLA' => '',
                             'CODPRY' => '',
-                            'CODRUT' => $p['CODRUT'] ?? '',
+                            'CODRUT' => $p['CODRUT'] ?? 'CENABAST',
                             'PGORI' => 13677,
                             'ORIGEN' => 'API',
                             'DIRORI1' => 'CARGA POR SISTEMA',
