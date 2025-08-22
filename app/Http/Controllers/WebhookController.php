@@ -73,7 +73,7 @@ class WebhookController extends Controller
             case 'created':
                 // Lógica para manejar el evento de creación
                 return response()->json(['status' => 'handled']);
-            case 'updated':
+            case 'update':
                 // Lógica para manejar el evento de actualización
                 return $this->handleUpdatedDispatchEvent($payload);
             case 'deleted':

@@ -42,5 +42,14 @@ return [
         'timeout'    => (int) env('DISPATCHTRACK_TIMEOUT', 15),
     ],
 
+    // config/services.php
+    'defontana' => [
+        'base_url' => env('DEFONTANA_BASE_URL', 'https://api.defontana.com/api'),
+        'username' => env('DEFONTANA_USERNAME'),
+        'password' => env('DEFONTANA_PASSWORD'),
+        'timeout'  => (int) env('DEFONTANA_TIMEOUT', 20),
+    ],
+
+
 
 ];
