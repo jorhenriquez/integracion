@@ -226,13 +226,11 @@ class SyncPedidos extends Command
                         
                     });
                     
-
-                    $this->successMessage("Pedido ".$p['numero_documento']." de cliente ".$p['codigo_cliente']." [ok]");
                     Log::channel('integracion')->info('Meribia insert OK', ['numero_documento' => $p['numero_documento']]);
 
                 } catch (Throwable $e) {
                     Log::channel('integracion')->error("Error creando Pedext/Devlinext", ['e' => $e->getMessage(), 'pedido' => $p['numero_documento']]);
-                    $this->errorMessage("Pedido ".$p['numero_documento']." de cliente ".$p['codigo_cliente']." [error]. ".substr($e->getMessage(),0,80));
+                    $this->errorMessage("Pedido ".$p['numero_documento']." de ".$p['cliente']['NOMBRE']." [error]. ".substr($e->getMessage(),0,80));
                     //$this->warn("Error creando Pedext/Devlinext: ".$e->getMessage());
                     continue;
                 }
@@ -246,7 +244,7 @@ class SyncPedidos extends Command
                             'updated_at'      => now(),
                         ]);
 
-                    $this->info("-- Modificado con éxito en plataforma");
+                    $this->successMessage("Pedido ".$p['numero_documento']." de ".$p['cliente']['NOMBRE']." [ok]");
                     Log::channel('integracion')->info('Pedido respaldado', [
                         'codigo_cliente'   => $p['codigo_cliente'] ?? null,
                         'numero_documento' => $p['numero_documento'] ?? null
