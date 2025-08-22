@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Viaje extends Model
 {
     protected $connection = 'meribia';
-    protected $table = 'VIAJES';
+    protected $table = 'VIAJE';
     protected $primaryKey = 'CODIGO'; // Ajusta si tu PK es diferente
     public $incrementing = true;
     protected $keyType = 'int';
