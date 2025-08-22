@@ -97,7 +97,7 @@ class WebhookController extends Controller
 
         switch($payload['event']) {
             case 'created': return response()->json(['status' => 'handled']);
-            case 'started': return $this->handleStartedRouteEvent($payload);
+            case 'start': return $this->handleStartedRouteEvent($payload);
             case 'ended':   return $this->handleEndedRouteEvent($payload);
             case 'updated': return response()->json(['status' => 'handled']);
             default:
