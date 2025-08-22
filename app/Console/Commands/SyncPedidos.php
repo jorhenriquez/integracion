@@ -256,7 +256,6 @@ class SyncPedidos extends Command
                     $this->warn("Error al actualizar plataforma: ".$e->getMessage());
                     continue;
                 }
-                dd();
             }
 
             $this->info('== Integración finalizada ==');
