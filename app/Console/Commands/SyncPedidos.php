@@ -235,7 +235,6 @@ class SyncPedidos extends Command
                     $this->warn("Error creando Pedext/Devlinext: ".$e->getMessage());
                     continue;
                 }
-                dd();
                 // 3.3) Actualizar plataforma (esta_respaldado=1, fecha_estimada)
                 try {
                     DB::connection('plataforma')->table('pedidos')
@@ -257,6 +256,7 @@ class SyncPedidos extends Command
                     $this->warn("Error al actualizar plataforma: ".$e->getMessage());
                     continue;
                 }
+                dd();
             }
 
             $this->info('== Integración finalizada ==');
