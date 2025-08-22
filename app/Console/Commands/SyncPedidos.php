@@ -207,7 +207,7 @@ class SyncPedidos extends Command
                             'NUMBULAPL' => null,
                             'NUMFAC' => $p['numero_documento'] ?? '',
                             'KILOS' => $p['peso'] ?? 0,
-                            'UNIDADES' => $p['cantidad'] ?? 1,
+                            'UNIDADES' => 0,
                             'BULTOS' => $p['cantidad'] ?? 1,
                             'VOLUMEN' => $p['volumen'] ?? 0,
                             'UNIVOL' => null,
