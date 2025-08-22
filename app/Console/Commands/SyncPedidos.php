@@ -272,7 +272,7 @@ class SyncPedidos extends Command
     {
         if ($s === null) return '';
         $s = mb_convert_encoding($s, 'UTF-8', 'UTF-8');
-        return trim(preg_replace('/\s+/', ' ', $s));
+        return substr(trim(preg_replace('/\s+/', ' ', $s)),0,80);
     }
 
     protected function insertarPedext($pedido, ?array $cliente): Pedext
