@@ -44,7 +44,7 @@ class SyncRutas extends Command
         // Ajusta el mapeo según el contrato real del endpoint /routes
         $dispatches = DB::connection('meribia')
             ->table('CARGA')
-            ->select('CARGA.REFERENCIA')
+            ->select('CARGA.REFERENCIA as identifier')
             ->join('GRUPAGE', 'GRUPAGE.CODCAR', '=', 'CARGA.CODIGO')
             ->join('VIAJES_PENDING', 'VIAJES_PENDING.VIAJE', '=', 'GRUPAGE.CODVIA')
             ->where('VIAJES_PENDING.VIAJE', $ruta['viaje'])   // 👈 ajusta aquí la columna correcta
