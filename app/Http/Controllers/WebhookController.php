@@ -255,7 +255,7 @@ class WebhookController extends Controller
         $carbonDate->setTimezone('America/Santiago'); // o 'America/Santiago' si prefieres tu zona local
 
         // Luego lo formateas para guardar en la base de datos
-        $formattedDate = $carbonDate->format('Y-m-d H:i:s.u');
+        $formattedDate = (string) $carbonDate->format('Y-m-d H:i:s.u');
 
         // Buscar pedido en la BD de plataforma
         try {
@@ -296,7 +296,7 @@ class WebhookController extends Controller
         $carbonDate->setTimezone('America/Santiago'); // o 'America/Santiago' si prefieres tu zona local
 
         // Luego lo formateas para guardar en la base de datos
-        $formattedDate = $carbonDate->format('Y-m-d H:i:s.u');
+        $formattedDate = (string) $carbonDate->format('Y-m-d H:i:s.u');
 
         // Buscar pedido en la BD de plataforma
         try {

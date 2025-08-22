@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WebhookController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\WebhookEventController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -20,5 +21,9 @@ Route::middleware('auth')->group(function () {
 
 
 Route::post('/webhook/dispatchtrack', [WebhookController::class, 'dispatchtrack']);
+Route::post('/webhook', [WebhookEventController::class, 'receive']);
+Route::get('/webhook-events', [WebhookEventController::class, 'index']);
+Route::get('/webhook-events/{id}', [WebhookEventController::class, 'show']);
+Route::patch('/webhook-events/{id}/process', [WebhookEventController::class, 'markAsProcessed']);
 
 require __DIR__.'/auth.php';
