@@ -152,7 +152,7 @@ class SyncPedidos extends Command
                             'TELORI' => '',
                             'MOVORI' => '',
                             'PGDES' => 0,
-                            'DESTINO' => $p['destino'] ?? 'Sin información',
+                            'DESTINO' => substr($p['destino'] ?? 'Sin información',0,75),
                             'DIRDES1' => $direccion,
                             'DIRDES2' => '',
                             'CPDES' => $p['comuna_id'].'0000',
