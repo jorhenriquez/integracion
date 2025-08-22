@@ -34,7 +34,7 @@ class DispatchTrackService
         }
         return false;
     }
-    
+
     public function createTruck(string $patente): array
     {
         $cfg = config('services.dispatchtrack');
@@ -89,10 +89,7 @@ class DispatchTrackService
 
         return [
             'status'   => (string) $resp->status(),
-            'response' => (object) [
-                'status'    => $resp->successful() ? 'ok' : 'error',
-                'response'  => $resp->json(),
-            ],
+            'response' => (string) $resp->json(),
         ];
     }
 
