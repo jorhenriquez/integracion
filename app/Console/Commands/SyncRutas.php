@@ -34,7 +34,7 @@ class SyncRutas extends Command
                 $this->info("Camión creado: " . $ruta['patente']);
             }
             $res = $dispatchTrack->createRoute($payload);
-            $this->line("- Ruta enviada: " . (print_r($res['response']->response['response']['route_id']) ?? 'sin id') . " | Status: " . $res['status']);
+            $this->line("- Ruta enviada: " . ($res['response']->response['response']['route_id'] ?? 'sin id') . " | Status: " . $res['status']);
         }
 
         $this->info('== Proceso finalizado ==');
