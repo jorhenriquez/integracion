@@ -11,6 +11,30 @@ class DispatchTrackService
      * Envía una ruta al endpoint /routes de DispatchTrack
      */
 
+    public function truckExists(string $patente): bool
+    {
+        $cfg = config('services.dispatchtrack');
+
+        $client = Http::timeout($cfg['timeout'] ?? 15)
+            ->baseUrl($cfg['base_url'] ?? '')
+            ->withHeaders([
+                $cfg['token_name'] ?? 'Authorization' => $cfg['token'] ?? '',
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+            ]);
+
+        $resp = $client->get('/trucks', ['identifier' => $patente]);
+
+        Log::channel('integracion')->info('DispatchTrack /trucks (check) request', ['identifier' => $patente]);
+        Log::channel('integracion')->info('DispatchTrack /trucks (check) response', ['status' => $resp->status(), 'body' => $resp->json()]);
+
+        if ($resp->successful()) {
+            $data = $resp->json();
+            return !empty($data) && isset($data[0]) && $data[0]['identifier'] === $patente;
+        }
+        return false;
+    }
+    
     public function createTruck(string $patente): array
     {
         $cfg = config('services.dispatchtrack');
