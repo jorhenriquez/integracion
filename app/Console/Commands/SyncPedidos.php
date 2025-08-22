@@ -124,6 +124,7 @@ class SyncPedidos extends Command
                         $this->warn("Error actualizando RUT en plataforma: ".$e->getMessage());
                     }
                 }
+                $pedext_codigo = 0;
                 // 3.2) PEDEXT + DEVLINEXT con Eloquent (transacción en 'meribia')
                 try {
                     DB::connection('meribia')->transaction(function () use ($p) {
@@ -241,7 +242,7 @@ class SyncPedidos extends Command
                             'IMPREP' => null,
                             'OBSERVACIONES' => null,
                         ]);
-                        
+                        $pedext_codigo = $pedext->getKey();
                     });
                     
                     Log::channel('integracion')->info('Meribia insert OK', ['numero_documento' => $p['numero_documento']]);
@@ -260,7 +261,7 @@ class SyncPedidos extends Command
                             'esta_respaldado' => 1,
                             'fecha_estimada'  => $p['fecha_estimada'],
                             'updated_at'      => now(),
-                            'pedext_id' => $pedext['CODIGO'],
+                            'pedext_id' => $pedext_codigo,
                         ]);
 
                     $this->successMessage("Pedido ".$p['numero_documento']." de ".$p['cliente']['NOMBRE']." [ok]");
