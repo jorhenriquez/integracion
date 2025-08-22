@@ -198,18 +198,32 @@ class SyncPedidos extends Command
                             'CODPDC' => 0,
                         ]);
 
-                        /*
-                        
-                        // Una línea de ejemplo (si tienes varias, itera)
                         $pedext->lineas()->create([
-                            // AJUSTA estos nombres a tu esquema real:
-                            'ITEM'      => 1,
-                            'SKU'       => $p['sku'] ?? ($p['numero_material'] ?? 'SKU'),
-                            'DESCRIP'   => $p['descripcion'] ?? 'Item',
-                            'CANTIDAD'  => (int) ($p['cantidad'] ?? 1),
-                            'NUMERO'    => (string) ($p['numero_documento'] ?? ''),
+                            // AJUSTA estos nombres a tu esquema real
+                            'PEDEXT' => $pedext->getKey(),
+                            'ORDEN' => 1,
+                            'FECHA' => now()->toDateString(),
+                            'NUMBUL' => null,
+                            'NUMBULAPL' => null,
+                            'NUMFAC' => $p['numero_documento'] ?? '',
+                            'KILOS' => $p['peso'] ?? 0,
+                            'UNIDADES' => $p['cantidad'] ?? 1,
+                            'BULTOS' => $p['cantidad'] ?? 1,
+                            'VOLUMEN' => $p['volumen'] ?? 0,
+                            'UNIVOL' => null,
+                            'TIPFAC' => null,
+                            'CONENT' => null,
+                            'INSTRUMENTO' => null,
+                            'DOCUMENTO' => null,
+                            'BANCO' => null,
+                            'IMPFAC' => null,
+                            'IMPORTE' => null,
+                            'VALMER' => $p['valor_neto'] ?? 0,
+                            'PREUNIREP' => null,
+                            'IMPREP' => null,
+                            'OBSERVACIONES' => null,
                         ]);
-                        */
+                        
                     });
                     
 
