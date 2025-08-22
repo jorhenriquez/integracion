@@ -22,7 +22,8 @@ class DispatchTrackService
                 'Content-Type' => 'application/json',
             ]);
 
-        $payload = $this->mapRutaToDispatchPayload($ruta);
+        //$payload = $this->mapRutaToDispatchPayload($ruta);
+        $payload = $ruta;
         $resp = $client->post('/routes', $payload);
 
         Log::channel('integracion')->info('DispatchTrack /routes request', $payload);
