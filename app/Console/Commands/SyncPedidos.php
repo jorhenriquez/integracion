@@ -78,7 +78,7 @@ class SyncPedidos extends Command
             // 3) Procesar cada pedido
             foreach ($pedidos as $p) {
 
-                $this->line("- Pedido: ".$p['numero_documento']);
+                //$this->line("- Pedido: ".$p['numero_documento']);
 
                 // Determinar fecha base (recepción) y fecha estimada
                 $fechaAuditoria = $p['fecha_auditoria'] ?? now()->toDateTimeString();
@@ -86,8 +86,8 @@ class SyncPedidos extends Command
                     ? LeadTime::calcular($fechaAuditoria, $calendario[$p['comuna_id']], /* feriados */ [])
                     : now()->addDays(15)->toDateString();
 
-                $this->line("--- Recepción: $fechaAuditoria");
-                $this->line("--- Entrega: ".$p['fecha_estimada']);
+                //$this->line("--- Recepción: $fechaAuditoria");
+                //$this->line("--- Entrega: ".$p['fecha_estimada']);
 
                 // Datos de cliente desde Meribia según codigo_cliente
                 $codigoCliente = (int) ($p['codigo_cliente'] ?? 0);
@@ -104,7 +104,7 @@ class SyncPedidos extends Command
                     $this->warn($msg);
                     continue;
                 }
-                $this->info("-- Creado con éxito en DispatchTrack");
+                //$this->info("-- Creado con éxito en DispatchTrack");
 
                 // 3.2) PEDEXT + DEVLINEXT con Eloquent (transacción en 'meribia')
                 try {
@@ -227,7 +227,7 @@ class SyncPedidos extends Command
                     });
                     
 
-                    $this->info("-- Creado con éxito en PEDEXT/DEVLINEXT (Meribia)");
+                    $this->successMessage("Pedido ".$p['numero_documento']." de cliente ".$p['codigo_cliente']." [ok]");
                     Log::channel('integracion')->info('Meribia insert OK', ['numero_documento' => $p['numero_documento']]);
 
                 } catch (Throwable $e) {
@@ -273,6 +273,11 @@ class SyncPedidos extends Command
         if ($s === null) return '';
         $s = mb_convert_encoding($s, 'UTF-8', 'UTF-8');
         return substr(trim(preg_replace('/\s+/', ' ', $s)),0,80);
+    }
+
+    protected function successMessage($message)
+    {
+        $this->output->writeln("\e[42m\e[97m {$message} \e[0m");
     }
 
     protected function insertarPedext($pedido, ?array $cliente): Pedext
