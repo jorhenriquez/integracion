@@ -232,7 +232,8 @@ class SyncPedidos extends Command
 
                 } catch (Throwable $e) {
                     Log::channel('integracion')->error("Error creando Pedext/Devlinext", ['e' => $e->getMessage(), 'pedido' => $p['numero_documento']]);
-                    $this->warn("Error creando Pedext/Devlinext: ".$e->getMessage());
+                    $this->errorMessage("Pedido ".$p['numero_documento']." de cliente ".$p['codigo_cliente']." [error]. ".substr($e->getMessage(),0,30));
+                    //$this->warn("Error creando Pedext/Devlinext: ".$e->getMessage());
                     continue;
                 }
                 // 3.3) Actualizar plataforma (esta_respaldado=1, fecha_estimada)
@@ -273,6 +274,11 @@ class SyncPedidos extends Command
         if ($s === null) return '';
         $s = mb_convert_encoding($s, 'UTF-8', 'UTF-8');
         return substr(trim(preg_replace('/\s+/', ' ', $s)),0,80);
+    }
+
+    protected function errorMessage($message)
+    {
+        $this->output->writeln("\e[41m\e[97m {$message} \e[0m");
     }
 
     protected function successMessage($message)
