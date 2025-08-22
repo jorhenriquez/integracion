@@ -106,6 +106,24 @@ class SyncPedidos extends Command
                 }
                 //$this->info("-- Creado con éxito en DispatchTrack");
 
+                // Verificar si tiene RUT en plataforma, sino, actualizar plataforma.
+                if (($p['rut'] ?? null) === null && ($p['cliente']['NIF'] ?? null) !== null) {
+                    try {
+                        DB::connection('plataforma')->table('users')
+                            ->where('codigo_cliente', $p['codigo_cliente'])
+                            ->update(['rut' => $p['cliente']['NIF']]);
+
+                        $this->info("-- Actualizado RUT en plataforma: ".$p['cliente']['NIF']);
+                        Log::channel('integracion')->info('RUT actualizado en plataforma', [
+                            'codigo_cliente' => $p['codigo_cliente'],
+                            'rut' => $p['cliente']['NIF']
+                        ]);
+
+                    } catch (Throwable $e) {
+                        Log::channel('integracion')->error("-- Error actualizando RUT en plataforma", ['e' => $e->getMessage(), 'codigo_cliente' => $p['codigo_cliente']]);
+                        $this->warn("Error actualizando RUT en plataforma: ".$e->getMessage());
+                    }
+                }
                 // 3.2) PEDEXT + DEVLINEXT con Eloquent (transacción en 'meribia')
                 try {
                     DB::connection('meribia')->transaction(function () use ($p) {
@@ -242,6 +260,7 @@ class SyncPedidos extends Command
                             'esta_respaldado' => 1,
                             'fecha_estimada'  => $p['fecha_estimada'],
                             'updated_at'      => now(),
+                            'pedext_id' => $pedext['CODIGO'],
                         ]);
 
                     $this->successMessage("Pedido ".$p['numero_documento']." de ".$p['cliente']['NOMBRE']." [ok]");
