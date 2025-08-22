@@ -230,7 +230,7 @@ class SyncPedidos extends Command
 
                 } catch (Throwable $e) {
                     Log::channel('integracion')->error("Error creando Pedext/Devlinext", ['e' => $e->getMessage(), 'pedido' => $p['numero_documento']]);
-                    $this->errorMessage("Pedido ".$p['numero_documento']." de ".$p['cliente']['NOMBRE']." [error]. ".substr($e->getMessage(),0,100));
+                    $this->errorMessage("Pedido ".$p['numero_documento']." de ".$p['cliente']['NOMBRE']." [error]. ".substr($e->getMessage(),0,150));
                     //$this->warn("Error creando Pedext/Devlinext: ".$e->getMessage());
                     continue;
                 }
