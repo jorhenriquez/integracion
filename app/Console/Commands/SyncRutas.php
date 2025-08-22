@@ -30,7 +30,7 @@ class SyncRutas extends Command
             $payload = $this->mapRutaToDispatchPayload($ruta);
             $res = $dispatchTrack->createRoute($payload);
             
-            if ($res['response']->response == 'Invalid truck identifier')
+            if ($res['response']->response === 'Invalid truck identifier')
             {
                 $this->line($res['response']->response);
                 $dispatchTrack->createTruck($ruta['patente']); 
