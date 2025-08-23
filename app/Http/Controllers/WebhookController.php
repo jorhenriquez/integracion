@@ -188,20 +188,20 @@ class WebhookController extends Controller
         try {
             // Actualizar la carga en Meribia
             // Verificar primero si tiene CODCAR en pedido.
-            if (!$pedido['codcar']) {
+            if (!$pedido->codcar) {
                 $resultado = DB::connection('meribia')->table('pedext')
                     ->join('pedcli', 'pedcli.codigo', '=', 'pedext.codpdc')
                     ->join('carga', 'carga.codigo', '=', 'pedcli.codcar')
-                    ->where('pedext.codigo', $pedido['pedext_id'])
+                    ->where('pedext.codigo', $pedido->pedext_id)
                     ->select('pedcli.codcar') // Asegúrate de seleccionar el campo que necesitas
                     ->first();
                 // Si el pedext tiene asociada una carga, entoncs se actualiza el valor codcar en plataforma
                 if ($resultado) {
-                    $pedido['codcar'] = $resultado->codcar;
+                    $pedido->codcar = $resultado->codcar;
                     DB::connection('plataforma')->table('pedidos')
-                        ->where('id', $pedido['id'])
+                        ->where('id', $pedido->id)
                         ->update([
-                            'codcar'      => $pedido['codcar'],
+                            'codcar'      => $pedido->codcar,
                         ]);
                 }
                 else {
@@ -214,7 +214,7 @@ class WebhookController extends Controller
             }
             
             // Volvemos a verificar si ya tenemos CODCAR
-            if ($pedido['codcar']) {
+            if ($pedido->codcar) {
                 // Modificar estado de la carga en Meribia
                 DB::connection('meribia')->table('carga')
                     ->where('codigo', $pedido['codcar'])
@@ -223,7 +223,7 @@ class WebhookController extends Controller
                     ]);
 
                 Log::channel('integracion')->info('Carga actualizada en Meribia', [
-                    'codcar' => $pedido['codcar'],
+                    'codcar' => $pedido->codcar,
                     'estado' => $estado,
                 ]);
             } else {
