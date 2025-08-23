@@ -32,14 +32,22 @@ class ProcessWebhooks extends Command
 
                 if ($response->successful()) {
                     $event->processed = true;
+                    $event->estado = 1; // Marca como error
+                    $event->save();
                     $event->save();
                     $this->successMessage("✓ Webhook ID {$event->id} procesado correctamente.");
                 } else {
                     $data = $response->json();
                     $error = $data['error'];
+                    $event->observaciones = $error;
+                    $event->estado = 2; // Marca como error
+                    $event->save();
                     $this->errorMessage("✗ Falló el procesamiento del webhook ID {$event->id}. Código: " . $error);
                 }
             } catch (\Exception $e) {
+                $event->observaciones = $e->getMessage();
+                $event->estado = 2; // Marca como error
+                $event->save();
                 $this->errorMessage("✗ Error al enviar el webhook ID {$event->id}: " . $e->getMessage());
             }
         }
