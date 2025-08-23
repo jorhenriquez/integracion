@@ -25,7 +25,8 @@ class WebhookEventController extends Controller
 
         return response()->json([
             'message' => 'Webhook recibido correctamente',
-            'event_id' => $event->id
+            'event_id' => $event->id,
+            'event' => $event
         ], 201);
     }
 
