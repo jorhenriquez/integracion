@@ -42,6 +42,7 @@ class WebhookController extends Controller
         switch($payload['resource']) {
             case 'dispatch':
                 // Procesar eventos de dispatch
+                Log::channel('integracion')->info('Evento de dispatch recibido', $payload);
                 return $this->handleDispatchEvent($payload);
             case 'route':
                 // Aquí podrías manejar eventos relacionados con rutas si es necesario
