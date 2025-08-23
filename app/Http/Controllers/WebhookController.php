@@ -199,7 +199,7 @@ class WebhookController extends Controller
                 if ($resultado) {
                     $pedido['codcar'] = $resultado->codcar;
                     DB::connection('plataforma')->table('pedidos')
-                        ->where('id', $pedido->id)
+                        ->where('id', $pedido['id'])
                         ->update([
                             'codcar'      => $pedido['codcar'],
                         ]);
