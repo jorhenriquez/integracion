@@ -25,7 +25,7 @@ class ProcessWebhooks extends Command
 
         foreach ($pending as $event) {
             try {
-                $response = Http::post(route('webhook_dispatchtrack'), $event->payload);
+                $response = Http::post('http://dispatch.supertrans.cl/webhook/dispatchtrack', $event->payload);
 
                 if ($response->successful()) {
                     $event->processed = true;
