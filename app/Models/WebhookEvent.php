@@ -11,6 +11,10 @@ class WebhookEvent extends Model
         'processed',
         'observaciones',
         'estado',
+        'ip',
+        'origen',
+        'referer',
+        'user_agent',
         'received_at'
     ];
 
