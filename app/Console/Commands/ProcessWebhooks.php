@@ -26,10 +26,11 @@ class ProcessWebhooks extends Command
         foreach ($pending as $event) {
             try {
                 $payload = is_string($event->payload) ? json_decode($event->payload, true) : $event->payload;
+
                 $response = Http::withHeaders(['X-AUTH-TOKEN' => 'SuperJorge2001',])
                                 ->post('http://dispatch.supertrans.cl/webhook/dispatchtrack', $payload);
 
-                $this->info("Payload enviado: " . json_encode($response));
+                $this->info("Payload enviado: " . print_r($payload));
                 if ($response->successful()) {
                     $event->processed = true;
                     $event->save();
