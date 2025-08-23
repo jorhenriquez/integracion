@@ -24,7 +24,7 @@ class WebhookEventController extends Controller
             'received_at' => now()
         ]);
 
-        Log::channel('webhook')->info('Webhook recepcionado', $request->headers()->all()->toArray());
+        Log::channel('webhook')->info('Webhook recepcionado', $request->headers->all());
 
         return response()->json([
             'message' => 'Webhook recibido correctamente',
