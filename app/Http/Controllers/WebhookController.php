@@ -136,7 +136,7 @@ class WebhookController extends Controller
     {
         // Extraer identifier y dividirlo
         $identifier = $payload['identifier'] ?? null;
-        
+        dd();
         if (!$identifier || !str_contains($identifier, '-')) {
             Log::channel('integracion')->warning('Formato de identifier inválido', ['identifier' => $identifier]);
             return response()->json(['error' => 'Invalid identifier'], 400);
