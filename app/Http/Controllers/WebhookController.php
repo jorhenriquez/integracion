@@ -181,7 +181,7 @@ class WebhookController extends Controller
                 'codigo_cliente' => $codigoCliente,
                 'numero_documento' => $numeroDocumento
             ]);
-            return response()->json(['error' => 'Error interno'], 500);
+            return response()->json(['error' => 'Error interno al actualizar la plataforma'], 500);
         }
 
         try {
@@ -196,7 +196,7 @@ class WebhookController extends Controller
                     ->first();
                 // Si el pedext tiene asociada una carga, entoncs se actualiza el valor codcar en plataforma
                 if ($resultado) {
-                    $pedido['codcar'] = $resultado['codcar'];
+                    $pedido['codcar'] = $resultado->codcar;
                     DB::connection('plataforma')->table('pedidos')
                         ->where('id', $pedido->id)
                         ->update([
@@ -238,7 +238,7 @@ class WebhookController extends Controller
                 'codigo_cliente' => $codigoCliente,
                 'numero_documento' => $numeroDocumento
             ]);
-            return response()->json(['error' => 'Error interno'], 500);
+            return response()->json(['error' => 'Error interno al modificar la base de datos Meribia'], 500);
         }
 
         return response()->json(['status' => 'ok']);
