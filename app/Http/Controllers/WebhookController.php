@@ -158,7 +158,7 @@ class WebhookController extends Controller
                     'codigo_cliente' => $codigoCliente,
                     'numero_documento' => $numeroDocumento
                 ]);
-                return response()->json(['error' => 'Pedido no encontrado'], 404);
+                return response()->json(['error' => 'Pedido '.$numeroDocumento.' de cliente '.$codigoCliente.' no encontrado'], 404);
             }
 
             // Actualizar pedido
