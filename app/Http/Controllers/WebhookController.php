@@ -175,7 +175,16 @@ class WebhookController extends Controller
                 'numero_documento' => $numeroDocumento,
                 'estado_documento_id' => $estado,
             ]);
+        } catch (Throwable $e) {
+            Log::channel('integracion')->error('Error al actualizar pedido', [
+                'error' => $e->getMessage(),
+                'codigo_cliente' => $codigoCliente,
+                'numero_documento' => $numeroDocumento
+            ]);
+            return response()->json(['error' => 'Error interno'], 500);
+        }
 
+        try {
             // Actualizar la carga en Meribia
             // Verificar primero si tiene CODCAR en pedido.
             if (!$pedido['codcar']) {
@@ -224,7 +233,7 @@ class WebhookController extends Controller
             }
 
         } catch (Throwable $e) {
-            Log::channel('integracion')->error('Error al actualizar pedido', [
+            Log::channel('integracion')->error('Error al actualizar base de datos', [
                 'error' => $e->getMessage(),
                 'codigo_cliente' => $codigoCliente,
                 'numero_documento' => $numeroDocumento
