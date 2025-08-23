@@ -20,8 +20,10 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::post('/webhook/dispatchtrack', [WebhookController::class, 'dispatchtrack']);
+Route::post('/webhook/dispatchtrack', [WebhookController::class, 'dispatchtrack'])->name('webhook_dispatchtrack');
+
 Route::post('/webhook', [WebhookEventController::class, 'receive']);
+
 Route::get('/webhook-events', [WebhookEventController::class, 'index']);
 Route::patch('/webhook-events/{id}/process', [WebhookEventController::class, 'markAsProcessed']);
 Route::get('/webhook-events/{id}', [WebhookEventController::class, 'show']);

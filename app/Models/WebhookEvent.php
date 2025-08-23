@@ -9,6 +9,8 @@ class WebhookEvent extends Model
     protected $fillable = [
         'payload',
         'processed',
+        'observaciones',
+        'estado',
         'received_at'
     ];
 

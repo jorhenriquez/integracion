@@ -15,6 +15,7 @@ class WebhookEventController extends Controller
         $event = WebhookEvent::create([
             'payload' => $request->all(),
             'processed' => false,
+            'estado' => 0,
             'received_at' => now()
         ]);
 

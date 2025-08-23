@@ -25,7 +25,7 @@ class ProcessWebhooks extends Command
 
         foreach ($pending as $event) {
             try {
-                $response = Http::post('https://tusitio.com/api/webhook/process', $event->payload);
+                $response = Http::post(route('webhook_dispatchtrack'), $event->payload);
 
                 if ($response->successful()) {
                     $event->processed = true;
