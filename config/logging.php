@@ -133,6 +133,12 @@ return [
             'level' => 'info',
         ],
 
+        'webhook' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/webhook.log'),
+            'level' => 'info',
+        ],
+
     ],
 
 ];
