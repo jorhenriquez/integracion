@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\WebhookEvent;
+use Illuminate\Support\Facades\Log;
 
 class WebhookEventController extends Controller
 {
@@ -22,6 +23,8 @@ class WebhookEventController extends Controller
             'estado' => 0,
             'received_at' => now()
         ]);
+
+        Log::channel('webhook')->info('Webhook recepcionado', $event);
 
         return response()->json([
             'message' => 'Webhook recibido correctamente',
