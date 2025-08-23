@@ -27,7 +27,7 @@ class ProcessWebhooks extends Command
             try {
                 $response = Http::withHeaders(['X-AUTH-TOKEN' => 'SuperJorge2001',])
                                 ->post('http://dispatch.supertrans.cl/webhook/dispatchtrack', $event->payload);
-
+                $this->info("Payload enviado: " . json_encode($event->payload));
                 if ($response->successful()) {
                     $event->processed = true;
                     $event->save();
