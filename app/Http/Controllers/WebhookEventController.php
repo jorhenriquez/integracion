@@ -16,7 +16,7 @@ class WebhookEventController extends Controller
         $event = WebhookEvent::create([
             'payload' => $request->all(),
             'origen' => $request->headers->get('origen') ?? 'desconocido',
-            'ip' => $request->ip() ?? $request->server('REMOTE_ADDR'),
+            'ip' => $request->host() ?? $request->server('REMOTE_ADDR'),
             'referer' => $request->headers->get('referer') ?? 'desconocido',
             'user_agent' => $request->header('User-Agent') ?? 'desconocido',
             'processed' => false,
