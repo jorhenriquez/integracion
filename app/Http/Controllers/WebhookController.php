@@ -135,7 +135,7 @@ class WebhookController extends Controller
     public function handleUpdatedDispatchEvent(array $payload)
     {
         // Extraer identifier y dividirlo
-        $identifier = $payload['identifier'] ?? null;
+        $identifier = $payload->identifier ?? null;
 
         if (!$identifier || !str_contains($identifier, '-')) {
             Log::channel('integracion')->warning('Formato de identifier inválido', ['identifier' => $identifier]);
