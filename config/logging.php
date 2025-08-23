@@ -135,7 +135,7 @@ return [
 
         'webhook' => [
             'driver' => 'single',
-            'path' => storage_path('logs/webhook.log'),
+            'path' => storage_path('logs/webhook-'.php_sapi_name().'.log'),
             'level' => 'info',
         ],
 
