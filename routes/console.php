@@ -12,5 +12,5 @@ Artisan::command('inspire', function () {
 
 Schedule::command('integracion:sync-pedidos')->everyTenMinutes()->withoutOverlapping();
 Schedule::command('integracion:sync-rutas')->everyTenMinutes()->withoutOverlapping();
-//Schedule::command('integracion:sync-facturas')->everyTenMinutes()->withoutOverlapping();
+Schedule::command('integracion:sync-facturas')->everyTenMinutes()->withoutOverlapping();
 
