@@ -34,6 +34,7 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+    
 
     'dispatchtrack' => [
         'base_url'   => env('DISPATCHTRACK_BASE_URL'),
