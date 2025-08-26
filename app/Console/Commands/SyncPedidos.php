@@ -143,7 +143,7 @@ class SyncPedidos extends Command
                             'NIFREM'      => $p['rut'] ?? null,
                             'NIFDES'     => $p['cliente']['NIF'],
                             'NOMCOM'    =>'API',
-                            'FECHA'         => $p['fecha_auditoria']->toDateString(),
+                            'FECHA'         => $p['fecha_auditoria'],
                             'FECLIM' => null,
                             'REFERENCIA' => $p['codigo_cliente'].'-'.$p['numero_documento'],
                             'NUMPLA' => '0',
