@@ -44,13 +44,13 @@ class SyncFacturas extends Command
             foreach($pedidos as $p){
                 $referencia = $p['codigo_cliente'].'-'.$p['numero_documento'];
                 $fecha = $p['fecha_auditoria'];
-                $this->line('Pedido: ' . $referencia);
+
                 
                 $pedcli = DB::connection('meribia')->select("SELECT TOP 1 * FROM PEDCLI WHERE REFERENCIA = '".$referencia."' AND ESTADO = 'P'");
 
                 if (!$pedcli)
                     continue;
-
+                $this->line('Pedido: ' . $referencia);
                 $pedcli = (array) $pedcli[0];
 
                 $this->line('Total pedidos en Meribia: ' . $pedcli['REFERENCIA'] ?? 'No existe');
