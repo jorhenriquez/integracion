@@ -14,6 +14,7 @@ use App\Models\ComunaCatalog;
 use App\Services\IntegracionService;
 use App\Support\LeadTime;
 use Throwable;
+use Carbon\Carbon;
 
 class SyncFacturas extends Command
 {
@@ -43,7 +44,8 @@ class SyncFacturas extends Command
 
             foreach($pedidos as $p){
                 $referencia = $p['codigo_cliente'].'-'.$p['numero_documento'];
-                $fecha = $p['fecha_auditoria'];
+                $fecha = Carbon::parse($p['fecha_auditoria'])->format('Y-m-d 00:00:0.000');
+                $p['fecha_auditoria'];
 
                 
                 $pedcli = DB::connection('meribia')->select("SELECT TOP 1 * FROM PEDCLI WHERE REFERENCIA = '".$referencia."' AND ESTADO = 'P'");
