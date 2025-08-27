@@ -56,11 +56,11 @@ class SyncFacturas extends Command
 
                 if (!$pedcli)
                     continue;
-                $this->line('Pedido: ' . $referencia);
+                //$this->line('Pedido: ' . $referencia);
                 
                 $pedcli = (array) $pedcli[0];
 
-                $this->line('Total pedidos en Meribia: ' . $pedcli['REFERENCIA'] ?? 'No existe');
+                //$this->line('Total pedidos en Meribia: ' . $pedcli['REFERENCIA'] ?? 'No existe');
          
                 try {  
                     DB::connection('meribia')->update("
@@ -69,7 +69,7 @@ class SyncFacturas extends Command
                         WHERE REFERENCIA = ? AND ESTADO = ?",
                         [$fecha, $referencia, 'P']
                     );
-                    $this->info("Pedido actualizado en Meribia: ".$referencia. " -> ".$fecha);
+                    //$this->info("Pedido actualizado en Meribia: ".$referencia. " -> ".$fecha);
 
                 }
                 catch (Throwable $e) {
