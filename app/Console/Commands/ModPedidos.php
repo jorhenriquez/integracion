@@ -42,13 +42,12 @@ class SyncFacturas extends Command
 
 
             foreach($pedidos as $p){
-                $this->line('Pedido: ' . $p['codigo_cliente'].'-'.$p['numero_documento']);
+                $referencia = $p['codigo_cliente'].'-'.$p['numero_documento'];
+                $this->line('Pedido: ' . $referencia);
                 
-                $pedext = Pedext::where('REFERENCIA', $p['codigo_cliente'].'.'.$p['numero_documento'])
-                        ->where('ESTADO', 'P')
-                        ->first();
+                $pedcli = DB::connection('meribia')->select("SELECT ¨FROM PEDCLI WHERE REFERENCIA = '".$referencia."' AND ESTADO = 'P'");
                 
-                $this->line('Total pedidos en Meribia: ' . $pedext['REFERENCIA'] ?? 'No existe');        
+                $this->line('Total pedidos en Meribia: ' . $pedcli['REFERENCIA'] ?? 'No existe');        
                         /*->update(['FECSAL' => trim($p['fecha_entrega'] ?? ''),]);
                         */
             }
