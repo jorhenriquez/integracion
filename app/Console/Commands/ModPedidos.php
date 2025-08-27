@@ -57,8 +57,9 @@ class SyncFacturas extends Command
                     continue;
 
                 $this->line('Total pedidos en Meribia: ' . $pedcli['REFERENCIA'] ?? 'No existe');
+
                 try {  
-                    DB::connection('meribia')->select("UPDATE PEDCLI SET FECSAL = '".$p['fecha_entrega']."' WHERE REFERENCIA = '".$referencia."' AND ESTADO = 'P'");
+                    DB::connection('meribia')->select("UPDATE PEDCLI SET FECSAL = '".$p['fecha_entrega']."' WHERE PEDCLI.REFERENCIA = '".$referencia."' AND PEDCLI.ESTADO = 'P'");
                     dd($pedcli);
                 }
                 catch (Throwable $e) {
@@ -71,7 +72,7 @@ class SyncFacturas extends Command
 
         }
         catch (Throwable $e) {
-            $this->warn("Error al obtener pedidos de plataforma: ".$e->getMessage());
+            $this->warn("Error al obtener pedidos de plataforma: ".$p);
         }
     }
 }
