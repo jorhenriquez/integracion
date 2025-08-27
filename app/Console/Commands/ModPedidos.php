@@ -45,13 +45,7 @@ class SyncFacturas extends Command
                 $referencia = $p['codigo_cliente'].'-'.$p['numero_documento'];
                 $this->line('Pedido: ' . $referencia);
                 
-                try {
-                    $pedcli = DB::connection('meribia')->select("SELECT * FROM PEDCLI WHERE REFERENCIA = '".$referencia."' AND ESTADO = 'P'");
-                }
-                catch (Throwable $e) {
-                    $this->warn("Error al obtener pedido de Meribia: ".$e->getMessage());
-                    continue;
-                }
+                $pedcli = DB::connection('meribia')->select("SELECT TOP 1 * FROM PEDCLI WHERE REFERENCIA = '".$referencia."' AND ESTADO = 'P'");
 
                 if (!$pedcli)
                     continue;
