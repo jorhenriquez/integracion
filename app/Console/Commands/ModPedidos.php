@@ -35,7 +35,7 @@ class SyncFacturas extends Command
                 ->join('users', 'users.id', '=', 'pedidos.user_id')
                 ->join('comunas', 'comunas.CODCOM', '=', 'pedidos.comuna_id')
                 ->selectRaw('pedidos.*, users.codigo_cliente, users.rut, comunas.CODRUT, comunas.CODCD')
-                ->where('fecha_entrega ', '>=', '2025-08-11');
+                ->where('pedidos.fecha_entrega  ', '>=', '2025-08-11');
             
             $pedidos = $q->orderBy('pedidos.id')->get()->map(fn($r) => (array) $r)->all();
             $this->line('Total pedidos: ' . count($pedidos));
