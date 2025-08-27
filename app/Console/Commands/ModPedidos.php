@@ -47,6 +47,7 @@ class SyncFacturas extends Command
                 
                 $pedcli = DB::connection('meribia')->select("SELECT * FROM PEDCLI WHERE REFERENCIA = '".$referencia."' AND ESTADO = 'P'");
                 
+                dd($pedcli);
                 $this->line('Total pedidos en Meribia: ' . $pedcli['REFERENCIA'] ?? 'No existe');        
                         /*->update(['FECSAL' => trim($p['fecha_entrega'] ?? ''),]);
                         */
