@@ -39,6 +39,17 @@ class SyncFacturas extends Command
             
             $pedidos = $q->orderBy('pedidos.id')->get()->map(fn($r) => (array) $r)->all();
             $this->line('Total pedidos: ' . count($pedidos));
+
+
+            foreach($pedidos as $p){
+                $this->line('Pedido: ' . $p['codigo_cliente'].'.'.$p['numero_documento']);
+                /*
+                Pedext::where('REFERENCIA', $p['codigo_cliente'].'.'.$p['numero_documento'])
+                        ->where('ESTADO', 'P')
+                        ->update(['FECSAL' => trim($p['fecha_entrega'] ?? ''),]);
+                        */
+            }
+
         }
         catch (Throwable $e) {
             $this->warn("Error al obtener pedidos de plataforma: ".$e->getMessage());
