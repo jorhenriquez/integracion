@@ -45,14 +45,26 @@ class SyncFacturas extends Command
                 $referencia = $p['codigo_cliente'].'-'.$p['numero_documento'];
                 $this->line('Pedido: ' . $referencia);
                 
-                $pedcli = DB::connection('meribia')->select("SELECT * FROM PEDCLI WHERE REFERENCIA = '".$referencia."' AND ESTADO = 'P'");
-                
+                try {
+                    $pedcli = DB::connection('meribia')->select("SELECT * FROM PEDCLI WHERE REFERENCIA = '".$referencia."' AND ESTADO = 'P'");
+                }
+                catch (Throwable $e) {
+                    $this->warn("Error al obtener pedido de Meribia: ".$e->getMessage());
+                    continue;
+                }
+
                 if (!$pedcli)
                     continue;
 
-                $this->line('Total pedidos en Meribia: ' . $pedcli['REFERENCIA'] ?? 'No existe');  
-                DB::connection('meribia')->select("UPDATE PEDCLI SET FECSAL = '".$p['fecha_entrega']."' WHERE REFERENCIA = '".$referencia."' AND ESTADO = 'P'");
-                dd($pedcli);
+                $this->line('Total pedidos en Meribia: ' . $pedcli['REFERENCIA'] ?? 'No existe');
+                try {  
+                    DB::connection('meribia')->select("UPDATE PEDCLI SET FECSAL = '".$p['fecha_entrega']."' WHERE REFERENCIA = '".$referencia."' AND ESTADO = 'P'");
+                    dd($pedcli);
+                }
+                catch (Throwable $e) {
+                    $this->warn("Error al actualizar pedido en Meribia: ".$e->getMessage());
+                    continue;
+                }
                         /*->update(['FECSAL' => trim($p['fecha_entrega'] ?? ''),]);
                         */
             }
