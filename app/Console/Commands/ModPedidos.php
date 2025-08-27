@@ -53,7 +53,7 @@ class SyncFacturas extends Command
                 $pedcli = (array) $pedcli[0];
 
                 $this->line('Total pedidos en Meribia: ' . $pedcli['REFERENCIA'] ?? 'No existe');
-                dd();
+         
                 try {  
                     DB::connection('meribia')->update("
                         UPDATE PEDCLI 
