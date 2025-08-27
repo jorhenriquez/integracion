@@ -72,7 +72,7 @@ class SyncFacturas extends Command
 
         }
         catch (Throwable $e) {
-            $this->warn("Error al obtener pedidos de plataforma: ".$p);
+            $this->warn("Error al obtener pedidos de plataforma: ".print_r($p));
         }
     }
 }
