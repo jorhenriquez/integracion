@@ -61,7 +61,8 @@ class SyncFacturas extends Command
                         WHERE REFERENCIA = ? AND ESTADO = ?",
                         [$p['fecha_entrega'], $referencia, 'P']
                     );
-                    dd($pedcli);
+                    $this->info("Pedido actualizado en Meribia: ".$referencia. " -> ".$p['fecha_entrega']);
+                    dd();
                 }
                 catch (Throwable $e) {
                     $this->warn("Error al actualizar pedido en Meribia: ".$e->getMessage());
