@@ -39,7 +39,9 @@ class SyncFacturas extends Command
                 ->where('pedidos.fecha_auditoria', '>=', '2025-08-11');
             
             $pedidos = $q->orderBy('pedidos.id')->get()->map(fn($r) => (array) $r)->all();
+            $total = count($pedidos);
             $this->line('Total pedidos: ' . count($pedidos));
+            $this->output->progressStart($total);
 
 
             foreach($pedidos as $p){
@@ -50,9 +52,12 @@ class SyncFacturas extends Command
                 
                 $pedcli = DB::connection('meribia')->select("SELECT TOP 1 * FROM PEDCLI WHERE REFERENCIA = '".$referencia."' AND ESTADO = 'P'");
 
+                $this->output->progressAdvance();
+
                 if (!$pedcli)
                     continue;
                 $this->line('Pedido: ' . $referencia);
+                
                 $pedcli = (array) $pedcli[0];
 
                 $this->line('Total pedidos en Meribia: ' . $pedcli['REFERENCIA'] ?? 'No existe');
@@ -65,7 +70,7 @@ class SyncFacturas extends Command
                         [$fecha, $referencia, 'P']
                     );
                     $this->info("Pedido actualizado en Meribia: ".$referencia. " -> ".$fecha);
-                    dd();
+
                 }
                 catch (Throwable $e) {
                     $this->warn("Error al actualizar pedido en Meribia: ".$e->getMessage());
@@ -74,6 +79,7 @@ class SyncFacturas extends Command
                         /*->update(['FECSAL' => trim($p['fecha_entrega'] ?? ''),]);
                         */
             }
+            $this->output->progressFinish();
 
         }
         catch (Throwable $e) {
