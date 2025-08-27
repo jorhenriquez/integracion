@@ -43,6 +43,7 @@ class SyncFacturas extends Command
 
             foreach($pedidos as $p){
                 $referencia = $p['codigo_cliente'].'-'.$p['numero_documento'];
+                $fecha = $p['fecha_auditoria'];
                 $this->line('Pedido: ' . $referencia);
                 
                 $pedcli = DB::connection('meribia')->select("SELECT TOP 1 * FROM PEDCLI WHERE REFERENCIA = '".$referencia."' AND ESTADO = 'P'");
@@ -59,9 +60,9 @@ class SyncFacturas extends Command
                         UPDATE PEDCLI 
                         SET FECSAL = ? 
                         WHERE REFERENCIA = ? AND ESTADO = ?",
-                        [$p['fecha_entrega'], $referencia, 'P']
+                        [$fecha, $referencia, 'P']
                     );
-                    $this->info("Pedido actualizado en Meribia: ".$referencia. " -> ".$p['fecha_entrega']);
+                    $this->info("Pedido actualizado en Meribia: ".$referencia. " -> ".$fecha);
                     dd();
                 }
                 catch (Throwable $e) {
