@@ -49,7 +49,8 @@ class SyncFacturas extends Command
 
                 if (!$pedcli)
                     continue;
-
+                $pedcli = (array) $pedcli[0];
+                $this->line(print_r($pedcli));
                 $this->line('Total pedidos en Meribia: ' . $pedcli['REFERENCIA'] ?? 'No existe');
 
                 try {  
@@ -66,7 +67,7 @@ class SyncFacturas extends Command
 
         }
         catch (Throwable $e) {
-            $this->warn("Error al obtener pedidos de plataforma: ".print_r($p));
+            $this->warn("Error al obtener pedidos de plataforma: ".$e->getMessage());
         }
     }
 }
