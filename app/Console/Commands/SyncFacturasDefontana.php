@@ -34,6 +34,7 @@ class SyncFacturasDefontana extends Command
         }
 
         $total = $facturas->count() + $notas->count();
+        $this->info("Total de documentos pendientes: $total");
         if ($total === 0) {
             return ['ok' => true, 'msg' => 'No hay documentos pendientes.'];
         }
