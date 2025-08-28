@@ -17,8 +17,21 @@ class SyncFacturasDefontana extends Command
         $this->info('== Sincronizando facturas y notas de crédito con Defontana ==');
 
         // 1. Obtener facturas y notas de crédito pendientes desde Meribia
-        $facturas = DB::connection('meribia')->table('DOC_PENDIENTES')->where('documentType', 'F')->get();
-        $notas = DB::connection('meribia')->table('DOC_PENDIENTES')->where('documentType', 'R')->get();
+        try {
+            $facturas = DB::connection('meribia')->table('DOC_PENDIENTES')->where('documentType', 'F')->get();
+        } catch (\Exception $e) {
+            Log::channel('integracion')->error('Error al obtener facturas pendientes', ['error' => $e->getMessage()]);
+            $this->error('Error al obtener facturas pendientes: ' . $e->getMessage());
+            return self::FAILURE;  
+        }
+
+        try{
+            $notas = DB::connection('meribia')->table('DOC_PENDIENTES')->where('documentType', 'R')->get();
+        } catch (\Exception $e) {
+            Log::channel('integracion')->error('Error al obtener notas de crédito pendientes', ['error' => $e->getMessage()]);
+            $this->error('Error al obtener notas de crédito pendientes: ' . $e->getMessage());
+            return self::FAILURE;
+        }
 
         $total = $facturas->count() + $notas->count();
         if ($total === 0) {
