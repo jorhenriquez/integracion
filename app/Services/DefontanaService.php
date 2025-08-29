@@ -11,34 +11,44 @@ class DefontanaService
     private string $base;
     private int $timeout;
     private ?string $token = null;
+    private string $user; // ID de usuario en Defontana, si aplica
+    private string $client; // ID de cliente en Defontana
+    private string $company; // ID de empresa en Defontana
+
 
     public function __construct()
     {
         $cfg = config('services.defontana');
         $this->base    = rtrim($cfg['base_url'], '/');
         $this->timeout = $cfg['timeout'] ?? 20;
+        $this->user    = $cfg['user'] ?? '';
+        $this->client  = $cfg['client'] ?? '';
+        $this->company = $cfg['company'] ?? '';
     }
 
     public function login(): string
     {
         $cfg = config('services.defontana');
 
+        $params = [
+            'client'   => $this->client,
+            'company'  => $this->company,
+            'user'     => $this->user,
+            'password' => $cfg['password'],
+            'email'    => $cfg['username'],
+        ];
+
         $resp = Http::timeout($this->timeout)
             ->baseUrl($this->base)
             ->acceptJson()
-            ->post('/Auth/EmailLogin', [
-                'email'    => $cfg['username'],
-                'password' => $cfg['password'],
-            ]);
+            ->get('/api/Auth/EmailLogin', $params);
 
         if (!$resp->successful()) {
             throw new \RuntimeException("Defontana Auth failed: HTTP {$resp->status()} {$resp->body()}");
         }
 
-        // Swagger indica que hay endpoints de Auth; toma el token del JSON devuelto por tu tenant.
         $json = $resp->json();
-        // Ajusta la clave exacta:
-        $this->token = $json['token'] ?? $json['accessToken'] ?? null;
+        $this->token = $json['authResult']['access_token'] ?? $json['token'] ?? $json['accessToken'] ?? null;
 
         if (!$this->token) {
             throw new \RuntimeException('Defontana: token ausente en respuesta de Auth');

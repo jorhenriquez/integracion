@@ -49,6 +49,9 @@ return [
         'username' => env('DEFONTANA_USERNAME'),
         'password' => env('DEFONTANA_PASSWORD'),
         'timeout'  => (int) env('DEFONTANA_TIMEOUT', 20),
+        'client' => env('DEFONTANA_CLIENT_SUPERTRANS_ID'),
+        'company' => env('DEFONTANA_COMPANY_SUPERTRANS_ID'),
+        'user' => env('DEFONTANA_USER_ID'),
     ],
 
 

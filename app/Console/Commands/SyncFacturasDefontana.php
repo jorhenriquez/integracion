@@ -44,7 +44,7 @@ class SyncFacturasDefontana extends Command
             // TODO: Implementar integración real con Defontana
             Log::channel('integracion')->info('Factura a enviar a Defontana', (array)$factura);
             // Simular envío y marcar como enviada
-            //$response = $defontanaService->saveSale((array)$factura);
+            $response = $defontanaService->saveSale((array)$factura);
         }
         foreach ($notas as $nota) {
             Log::channel('integracion')->info('Nota de crédito a enviar a Defontana', (array)$nota);
@@ -54,5 +54,16 @@ class SyncFacturasDefontana extends Command
         return ['ok' => true, 'msg' => "Documentos sincronizados: $total"];
 
         return self::SUCCESS;
+    }
+
+    public function mapPayloadToSaveSale(array $document): array
+    {
+        // Mapea los campos del documento al formato que espera Defontana
+        return [
+            'client_id' => $document['client_id'],
+            'date' => $document['date'],
+            'items' => $document['items'], // Asegúrate de mapear los items correctamente
+            // Otros campos necesarios...
+        ];
     }
 }
