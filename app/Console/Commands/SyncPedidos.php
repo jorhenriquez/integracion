@@ -265,7 +265,7 @@ class SyncPedidos extends Command
                             'pedext_id' => $pedext_codigo,
                         ]);
 
-                    $this->successMessage("Pedido ".$p['numero_documento']." de ".$p['cliente']['NOMBRE']." [ok]");
+                    //$this->successMessage("Pedido ".$p['numero_documento']." de ".$p['cliente']['NOMBRE']." [ok]");
                     Log::channel('integracion')->info('Pedido respaldado', [
                         'codigo_cliente'   => $p['codigo_cliente'] ?? null,
                         'numero_documento' => $p['numero_documento'] ?? null
