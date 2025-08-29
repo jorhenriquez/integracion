@@ -24,9 +24,9 @@ class SyncPedidos extends Command
         // Ejemplo en el Command handle():
         $count = app(IntegracionService::class)->syncComunas();
         $this->info("Catálogo de comunas sincronizado: {$count} filas.");
-        $total = $count;
+    
         $this->info('== Iniciando integración ==');
-        $this->output->progressStart($total);
+        
         try {
             // 1) Traer pedidos pendientes desde plataforma (MySQL)
             $q = DB::connection('plataforma')->table('pedidos')
@@ -42,8 +42,10 @@ class SyncPedidos extends Command
             }
 
             $pedidos = $q->orderBy('pedidos.id')->get()->map(fn($r) => (array) $r)->all();
+            $total = count($pedidos);
+            $this->line('Total pedidos: ' . $total);
+            $this->output->progressStart($total);
 
-            $this->line('Total pedidos: ' . count($pedidos));
             Log::channel('integracion')->info('Pedidos a procesar', ['count' => count($pedidos)]);
             
             if (!count($pedidos)) {
@@ -77,7 +79,6 @@ class SyncPedidos extends Command
         
             // 3) Procesar cada pedido
             foreach ($pedidos as $p) {
-                $this->output->progressAdvance();
                 //$this->line("- Pedido: ".$p['numero_documento']);
 
                 // Determinar fecha base (recepción) y fecha estimada
@@ -275,8 +276,9 @@ class SyncPedidos extends Command
                     $this->warn("Error al actualizar plataforma: ".$e->getMessage());
                     continue;
                 }
+                $this->output->progressAdvance();
             }
-
+            $this->output->progressFinish();
             $this->info('== Integración finalizada ==');
             return self::SUCCESS;
 
@@ -285,7 +287,7 @@ class SyncPedidos extends Command
             $this->error('Error global: '.$e->getMessage());
             return self::FAILURE;
         }
-        $this->output->progressFinish();
+        
     }
 
     private function normalize(?string $s): string
